@@ -1,0 +1,11 @@
+db.workshops.countDocuments()
+
+db.workshops.aggregate({$unwind: "$registrations"}, {$group: {"_id": null, tcount: {$sum: 1}}});
+
+db.workshops.find({category: "Tech", capacity: { $lt: 50 }}, {_id: 1, title: 1, capacity: 1})
+
+db.workshops.find({category: "Wellness", eventDate: {$gte: ISODate("2025-11-13T00:00:00Z")}}, {_id: 1})
+
+db.workshops.find({"registrations.2": {$exists: true}}, {_id: 1})
+
+db.workshops.aggregate([{$unwind: "$registrations"}, {$group: {_id: "$registrations.studentID", workshops: {$addToSet: "$_id"}}}, {$match: {"workshops.1": {$exists: true}}}, {$project: {_id: 0, studentID: "$_id"}}])
