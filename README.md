@@ -1,530 +1,265 @@
-# \# Workshop Registration System
+# Workshop Registration System
+
+A workshop registration management system built with **Python, Tkinter, Oracle SQL and MongoDB**.
+
+The project explores the same workshop registration domain using both a **relational database model** and a **document-oriented model**. It also includes a desktop application for interacting with the Oracle database and a Python script that transforms the relational dataset into MongoDB documents.
+
+## Features
+
+The desktop application allows users to:
+
+- Connect to an Oracle database.
+- Initialize the database from an SQL script.
+- View workshops and registrations.
+- Search workshops by ID, title or category.
+- View students registered for a workshop.
+- Check available seats.
+- Register students for workshops.
+- Prevent duplicate registrations.
+- Prevent registrations when a workshop is full.
+- Delete existing registrations.
 
-# 
+The application uses parameterized SQL queries when interacting with the database.
 
-# A workshop registration management system built with \*\*Python, Tkinter, Oracle SQL and MongoDB\*\*.
+## Technologies
 
-# 
+- Python
+- Tkinter
+- Oracle Database
+- `python-oracledb`
+- SQL
+- MongoDB
+- JavaScript
+
+## Project Structure
+
+```text
+workshop-registration-system/
+│
+├── app/
+│   └── main.py
+│
+├── mongodb/
+│   ├── build_workshops_js.py
+│   ├── workshops_load.js
+│   └── queries_commands.txt
+│
+├── relational/
+│   └── workshops_registrations.sql
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+## Relational Database
 
-# The project explores the same workshop registration domain using both a \*\*relational database model\*\* and a \*\*document-oriented model\*\*. It also includes a desktop application for interacting with the Oracle database and a Python script that transforms the relational dataset into MongoDB documents.
+The relational version of the project is stored in:
 
-# 
+```text
+relational/workshops_registrations.sql
+```
 
-# \## Features
+The Oracle database contains two main tables:
 
-# 
+```text
+Workshops
+    │
+    │ 1
+    │
+    │ N
+Registrations
+```
 
-# The desktop application allows users to:
+A workshop contains information such as:
 
-# 
+- Workshop ID
+- Title
+- Category
+- Event date
+- Location
+- Capacity
 
-# \- Connect to an Oracle database.
+Registrations associate students with workshops and store the corresponding registration date.
 
-# \- Initialize the database from an SQL script.
+The SQL script creates the required database structure and inserts the sample data used by the application.
 
-# \- View workshops and registrations.
+## Desktop Application
 
-# \- Search workshops by ID, title or category.
+The desktop application is located in:
 
-# \- View students registered for a workshop.
+```text
+app/main.py
+```
 
-# \- Check available seats.
+It provides a graphical interface built with Tkinter for interacting with the Oracle database.
 
-# \- Register students for workshops.
+The main menu includes:
 
-# \- Prevent duplicate registrations.
+```text
+1. View Table Contents
+2. Search Workshops
+3. Show Registered Students
+4. Register a New Student
+5. Delete a Registration
+6. Exit
+```
 
-# \- Prevent registrations when a workshop is full.
+Before creating a new registration, the application checks that:
 
-# \- Delete existing registrations.
+- The workshop exists.
+- The workshop has available capacity.
+- The student is not already registered.
 
-# 
+## MongoDB Model
 
-# The application uses parameterized SQL queries when interacting with the database.
+The project also contains a document-oriented representation of the same workshop dataset.
 
-# 
+Instead of storing workshops and registrations in separate tables, each workshop is represented as a MongoDB document with its registrations embedded inside it.
 
-# \## Technologies
+Example:
 
-# 
+```javascript
+{
+    _id: 101,
+    title: "Intro to Data Visualization",
+    category: "Tech",
+    eventDate: ISODate("2025-11-05T00:00:00Z"),
+    location: "Innovation Hall 204",
+    capacity: 40,
+    registrations: [
+        {
+            studentID: "G01230001",
+            registeredOn: ISODate("2025-10-28T00:00:00Z")
+        }
+    ]
+}
+```
 
-# \- Python
+This makes it possible to compare relational and document-oriented approaches for the same application domain.
 
-# \- Tkinter
+## SQL to MongoDB Transformation
 
-# \- Oracle Database
+The script:
 
-# \- `python-oracledb`
+```text
+mongodb/build_workshops_js.py
+```
 
-# \- SQL
+reads the relational data from:
 
-# \- MongoDB
+```text
+relational/workshops_registrations.sql
+```
 
-# \- JavaScript
+and generates:
 
-# 
+```text
+mongodb/workshops_load.js
+```
 
-# \## Project Structure
+The generated JavaScript file contains MongoDB `insertOne()` commands.
 
-# 
+Registrations belonging to the same workshop are grouped and embedded inside the corresponding workshop document.
 
-# ```text
+## MongoDB Queries
 
-# workshop-registration-system/
+Example MongoDB queries and aggregation pipelines are included in:
 
-# │
+```text
+mongodb/queries_commands.txt
+```
 
-# ├── app/
+They include operations such as:
 
-# │   └── main.py
+- Counting workshop documents.
+- Counting total registrations.
+- Filtering workshops by category and capacity.
+- Filtering workshops by event date.
+- Finding workshops with multiple registrations.
+- Finding students registered for multiple workshops.
 
-# │
+## Relational vs Document Model
 
-# ├── mongodb/
+| Relational Model | Document Model |
+|---|---|
+| Oracle Database | MongoDB |
+| SQL | MongoDB Query Language |
+| `Workshops` and `Registrations` tables | Workshop documents |
+| Registrations stored separately | Registrations embedded inside workshops |
+| Foreign-key relationships | Nested document structure |
+| SQL queries | Find queries and aggregation pipelines |
 
-# │   ├── build\_workshops\_js.py
+## Requirements
 
-# │   ├── workshops\_load.js
+Python 3 is required.
 
-# │   └── queries\_commands.txt
+Install the Python dependency from the project root:
 
-# │
+```bash
+pip install -r requirements.txt
+```
 
-# ├── relational/
+The project uses:
 
-# │   └── workshops\_registrations.sql
+```text
+oracledb
+```
 
-# │
+An Oracle Database connection is required to run the desktop application.
 
-# ├── .gitignore
+MongoDB is required only for the document-oriented part of the project.
 
-# ├── README.md
+## Running the Oracle Application
 
-# └── requirements.txt
+From the project root, run:
 
-# ```
+```bash
+python app/main.py
+```
 
-# 
+The application asks for:
 
-# \## Relational Database
+1. Oracle username.
+2. Oracle password.
+3. The path to the SQL initialization script.
 
-# 
+Use:
 
-# The relational version of the project is stored in:
+```text
+relational/workshops_registrations.sql
+```
 
-# 
+as the initialization script.
 
-# ```text
+After the database has been initialized successfully, the main application interface will be displayed.
 
-# relational/workshops\_registrations.sql
+## Generating the MongoDB Dataset
 
-# ```
+From the project root, run:
 
-# 
+```bash
+python mongodb/build_workshops_js.py
+```
 
-# The Oracle database contains two main tables:
+The script transforms the relational dataset into MongoDB documents and generates:
 
-# 
+```text
+mongodb/workshops_load.js
+```
 
-# ```text
+This file can then be executed in MongoDB to populate the `workshops` collection.
 
-# Workshops
+## Purpose
 
-# &#x20;   │
+The project demonstrates how the same data can be represented and queried using two different database paradigms.
 
-# &#x20;   │ 1
+It combines:
 
-# &#x20;   │
-
-# &#x20;   │ N
-
-# Registrations
-
-# ```
-
-# 
-
-# A workshop contains information such as:
-
-# 
-
-# \- Workshop ID
-
-# \- Title
-
-# \- Category
-
-# \- Event date
-
-# \- Location
-
-# \- Capacity
-
-# 
-
-# Registrations associate students with workshops and store the corresponding registration date.
-
-# 
-
-# The SQL script creates the required database structure and inserts the sample data used by the application.
-
-# 
-
-# \## Desktop Application
-
-# 
-
-# The desktop application is located in:
-
-# 
-
-# ```text
-
-# app/main.py
-
-# ```
-
-# 
-
-# It provides a graphical interface built with Tkinter for interacting with the Oracle database.
-
-# 
-
-# The main menu includes:
-
-# 
-
-# ```text
-
-# 1\. View Table Contents
-
-# 2\. Search Workshops
-
-# 3\. Show Registered Students
-
-# 4\. Register a New Student
-
-# 5\. Delete a Registration
-
-# 6\. Exit
-
-# ```
-
-# 
-
-# Before creating a new registration, the application checks that:
-
-# 
-
-# \- The workshop exists.
-
-# \- The workshop has available capacity.
-
-# \- The student is not already registered.
-
-# 
-
-# \## MongoDB Model
-
-# 
-
-# The project also contains a document-oriented representation of the same workshop dataset.
-
-# 
-
-# Instead of storing workshops and registrations in separate tables, each workshop is represented as a MongoDB document with its registrations embedded inside it.
-
-# 
-
-# Example:
-
-# 
-
-# ```javascript
-
-# {
-
-# &#x20;   \_id: 101,
-
-# &#x20;   title: "Intro to Data Visualization",
-
-# &#x20;   category: "Tech",
-
-# &#x20;   eventDate: ISODate("2025-11-05T00:00:00Z"),
-
-# &#x20;   location: "Innovation Hall 204",
-
-# &#x20;   capacity: 40,
-
-# &#x20;   registrations: \[
-
-# &#x20;       {
-
-# &#x20;           studentID: "G01230001",
-
-# &#x20;           registeredOn: ISODate("2025-10-28T00:00:00Z")
-
-# &#x20;       }
-
-# &#x20;   ]
-
-# }
-
-# ```
-
-# 
-
-# This makes it possible to compare relational and document-oriented approaches for the same application domain.
-
-# 
-
-# \## SQL to MongoDB Transformation
-
-# 
-
-# The script:
-
-# 
-
-# ```text
-
-# mongodb/build\_workshops\_js.py
-
-# ```
-
-# 
-
-# reads the relational data from:
-
-# 
-
-# ```text
-
-# relational/workshops\_registrations.sql
-
-# ```
-
-# 
-
-# and generates:
-
-# 
-
-# ```text
-
-# mongodb/workshops\_load.js
-
-# ```
-
-# 
-
-# The generated JavaScript file contains MongoDB `insertOne()` commands.
-
-# 
-
-# Registrations belonging to the same workshop are grouped and embedded inside the corresponding workshop document.
-
-# 
-
-# \## MongoDB Queries
-
-# 
-
-# Example MongoDB queries and aggregation pipelines are included in:
-
-# 
-
-# ```text
-
-# mongodb/queries\_commands.txt
-
-# ```
-
-# 
-
-# They include operations such as:
-
-# 
-
-# \- Counting workshop documents.
-
-# \- Counting total registrations.
-
-# \- Filtering workshops by category and capacity.
-
-# \- Filtering workshops by event date.
-
-# \- Finding workshops with multiple registrations.
-
-# \- Finding students registered for multiple workshops.
-
-# 
-
-# \## Relational vs Document Model
-
-# 
-
-# | Relational Model | Document Model |
-
-# |---|---|
-
-# | Oracle Database | MongoDB |
-
-# | SQL | MongoDB Query Language |
-
-# | `Workshops` and `Registrations` tables | Workshop documents |
-
-# | Registrations stored separately | Registrations embedded inside workshops |
-
-# | Foreign-key relationships | Nested document structure |
-
-# | SQL queries | Find queries and aggregation pipelines |
-
-# 
-
-# \## Requirements
-
-# 
-
-# Python 3 is required.
-
-# 
-
-# Install the Python dependency from the project root:
-
-# 
-
-# ```bash
-
-# pip install -r requirements.txt
-
-# ```
-
-# 
-
-# The project uses:
-
-# 
-
-# ```text
-
-# oracledb
-
-# ```
-
-# 
-
-# An Oracle Database connection is required to run the desktop application.
-
-# 
-
-# MongoDB is required only for the document-oriented part of the project.
-
-# 
-
-# \## Running the Oracle Application
-
-# 
-
-# From the project root, run:
-
-# 
-
-# ```bash
-
-# python app/main.py
-
-# ```
-
-# 
-
-# The application asks for:
-
-# 
-
-# 1\. Oracle username.
-
-# 2\. Oracle password.
-
-# 3\. The path to the SQL initialization script.
-
-# 
-
-# Use:
-
-# 
-
-# ```text
-
-# relational/workshops\_registrations.sql
-
-# ```
-
-# 
-
-# as the initialization script.
-
-# 
-
-# After the database has been initialized successfully, the main application interface will be displayed.
-
-# 
-
-# \## Generating the MongoDB Dataset
-
-# 
-
-# From the project root, run:
-
-# 
-
-# ```bash
-
-# python mongodb/build\_workshops\_js.py
-
-# ```
-
-# 
-
-# The script transforms the relational dataset into MongoDB documents and generates:
-
-# 
-
-# ```text
-
-# mongodb/workshops\_load.js
-
-# ```
-
-# 
-
-# This file can then be executed in MongoDB to populate the `workshops` collection.
-
-# 
-
-# \## Purpose
-
-# 
-
-# The project demonstrates how the same data can be represented and queried using two different database paradigms.
-
-# 
-
-# It combines:
-
-# 
-
-# \- Relational database design.
-
-# \- SQL queries and data manipulation.
-
-# \- Oracle database connectivity from Python.
-
-# \- Desktop GUI development.
-
-# \- MongoDB document modeling.
-
-# \- MongoDB aggregation queries.
-
-# \- Automated transformation from relational data to document-oriented data.
-
+- Relational database design.
+- SQL queries and data manipulation.
+- Oracle database connectivity from Python.
+- Desktop GUI development.
+- MongoDB document modeling.
+- MongoDB aggregation queries.
+- Automated transformation from relational data to document-oriented data.
